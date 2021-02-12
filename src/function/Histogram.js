@@ -1,21 +1,84 @@
 import React, { Component } from 'react'
-import { Button, Col, Input, Layout, Row, Table, Typography } from 'antd'
+import { Input } from 'antd';
+import { Button } from 'antd';
+import { Table} from 'antd';
 
-const { Title } = Typography
-const { Content } = Layout
+const columns = [
+  {
+    title: 'Letter',
+    dataIndex: 'Letter',
+    key: 'Letter',
+  },
+  {
+    title: 'Amount',
+    dataIndex: 'Amount',
+    key: 'Amount',
+  },
 
-export default class Histogram extends Component {
-  constructor(props) {
+];
+
+// const data = [
+//   {
+//     key: '1',
+//     Letter: 'John Brown',
+//     Amount: 32,
+//   },
+//   {
+//     key: '2',
+//     Letter: 'Jim Green',
+//     Amount: 42,
+//   },
+//   {
+//     key: '3',
+//     Letter: 'Joe Black',
+//     Amount: 32,
+//   },
+// ];
+
+export default class histogram extends Component {
+  constructor (props) {
     super(props)
     this.state = {
-      data: [],
-      text: ''
+      data:[],
+      txt:'',
     }
   }
+  _enter =(e) =>{
+    this.setState({
+      txt: e.target.value
+      
+    })
+  }
+  _display =()=>{
+    console.log(this.state.txt)
+  }
+  _histogram =()=>{
+    const txt = this.state.txt //ประกาศตัวแปร text ให้มีค่า string เท่ากับ JaoSuii 
+    const histogram={}//สร้าง obj เปล่า
 
-  _header = [
+    for (const c of txt){ //ใช้ forof วนลูป c ทีละตัวใน text
+      if ( histogram[c]===undefined )//ถ้า c ใน histogram มีค่าเป็น undefined หรือคือไม่เคยมีตัวอักษรตัวนี้มาก่อนให้นับเป็น 1
+        histogram[c]=1
+      else//นอกจากนั้นให้บวกเพิ่ม 1
+        histogram[c]=histogram[c]+1
+    }
+
+    console.log(histogram)//โชว์ histogram ผ่านconsole
+    console.log(Object.keys(histogram))
+    console.log(Object.values(histogram))
+
+    this.setState({
+   
+      data:Object.keys(histogram).sort().map(c=>({//
+        key:c,
+        letter:c,
+        amount:histogram[c],
+      }))
+    })
+  }
+  _columns = [
     {
-      title: 'Letters',
+      title: 'Letter',
       dataIndex: 'letter',
       key: 'letter',
     },
@@ -23,41 +86,24 @@ export default class Histogram extends Component {
       title: 'Amount',
       dataIndex: 'amount',
       key: 'amount',
-    }
-  ]
-
-  _generateHistogram = () => {
-    const { text } = this.state
-    const histogram = {}
-    text.split('').forEach(c => {
-      if (histogram[c]) histogram[c] = histogram[c] + 1
-      else histogram[c] = 1
-    })
-    this.setState({
-      data: Object.keys(histogram).sort().map(c => ({
-        key: c,
-        letter: c,
-        amount: histogram[c]
-      }))
-    })
-  }
+    },
   
+  ];
+
+ 
+
   render() {
     return (
-      <Content style={{ padding: 20 }}>
-        <Title level={2}>Histogram</Title>
-        <Row>
-          <Col xs={24} md={12}>
-            <Input value={this.state.text} onChange={e => this.setState({
-              text: e.target.value
-            })} />
-            <Button onClick={this._generateHistogram}>Generate Histogram</Button>
-          </Col>
-          <Col xs={24} md={12}>
-            <Table dataSource={this.state.data} columns={this._header} />
-          </Col>
-        </Row>
-      </Content>
+      <div>
+        <Input 
+          placeholder="Give me some world !!!" 
+          onChange={this._enter}
+          value={this.state.txt} 
+          />
+        
+        <Button type="primary" onClick={this._histogram}>Enter</Button>
+        <Table columns={this._columns} dataSource={this.state.data} />
+      </div>
     )
   }
 }
