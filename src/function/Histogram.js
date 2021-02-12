@@ -62,18 +62,27 @@ export default class histogram extends Component {
       else//นอกจากนั้นให้บวกเพิ่ม 1
         histogram[c]=histogram[c]+1
     }
-
+    // const input =[2,3,4]
+    // const output= input.map(x=>x**2+1)
+    // console.log(output)
     console.log(histogram)//โชว์ histogram ผ่านconsole
     console.log(Object.keys(histogram))
     console.log(Object.values(histogram))
 
     this.setState({
-   
-      data:Object.keys(histogram).map(c=>({//
-        key:c,
-        letter:c,
-        amount:histogram[c],
-      }))
+      data: Object.keys(histogram).sort().map(function(c){
+        return {
+          key:c,
+          letter:c,
+          amount:histogram[c],
+
+        }})
+      
+      // data:Object.keys(histogram).map(c=>({//
+      //   key:c,
+      //   letter:c,
+      //   amount:histogram[c],
+      // }))
     })
   }
   _columns = [
