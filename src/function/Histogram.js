@@ -69,7 +69,7 @@ export default class histogram extends Component {
 
     this.setState({
    
-      data:Object.keys(histogram).sort().map(c=>({//
+      data:Object.keys(histogram).map(c=>({//
         key:c,
         letter:c,
         amount:histogram[c],
